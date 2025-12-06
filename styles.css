@@ -299,9 +299,9 @@ h1 {
   right: 14px;
   padding: 10px 12px;
   border-radius: 12px;
-  background: rgba(47, 232, 157, 0.12);
-  color: var(--accent);
-  border: 1px solid rgba(47, 232, 157, 0.4);
+  background: rgba(0, 0, 0, 0.6);
+  color: #f2f8f5;
+  border: 1px solid rgba(47, 232, 157, 0.35);
   font-weight: 700;
 }
 

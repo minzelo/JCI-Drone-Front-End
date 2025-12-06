@@ -209,6 +209,25 @@ navToggle.addEventListener("click", () => {
   nav.classList.toggle("open");
 });
 
+/* Hero video: swap between primary and tiger clip */
+const heroVideo = document.getElementById("heroVideo");
+if (heroVideo) {
+  const heroSources = [heroVideo.dataset.srcPrimary, heroVideo.dataset.srcAlt].filter(Boolean);
+  let heroIndex = 0;
+
+  heroVideo.addEventListener("ended", () => {
+    if (heroSources.length < 2) {
+      heroVideo.currentTime = 0;
+      heroVideo.play();
+      return;
+    }
+    heroIndex = (heroIndex + 1) % heroSources.length;
+    heroVideo.src = heroSources[heroIndex];
+    heroVideo.currentTime = 0;
+    heroVideo.play();
+  });
+}
+
 /* Metric animation */
 const metrics = document.querySelectorAll(".metric-value");
 const animateMetrics = () => {
