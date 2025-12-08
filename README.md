@@ -19,3 +19,7 @@ Landing page untuk armada drone JCI yang dibuat untuk final project HCI LAB.
 
 ## Sumber desain
 - Figma: `JCI Design.fig` (berkas di direktori utama)
+
+## Kelengkapan pengumpulan (ketentuan 9)
+- Sertakan seluruh isi proyek beserta seluruh aset yang dipakai (gambar, audio, video, dll) saat dikumpulkan.
+- Lampirkan juga dokumen `.doc` berisi dokumentasi proyek: daftar halaman aplikasi, referensi/link sumber aset tambahan, serta penjelasan cara menggunakan aplikasi.
