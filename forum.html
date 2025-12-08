@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum | JCI SkyVision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Go to JCI home">
+      <div class="brand-mark">JCI</div>
+      <div class="brand-text">
+        <span>SkyVision</span>
+        <small>Drone Innovation Lab</small>
+      </div>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="forum.html">Forum</a>
+      <a href="store.html">Store</a>
+      <a href="contact.html">Contact</a>
+      <a class="pill" href="store.html#app">Get the App</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section hero" id="forum">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Forum</p>
+          <h1>Signals from the JCI crew</h1>
+          <p class="lede">Filter by category to find threads for cinematic, rescue, mapping, or industrial missions.</p>
+          <div class="actions">
+            <a class="btn primary" href="products.html">View products</a>
+            <a class="btn ghost" href="contact.html">Contact support</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <h3>Category shortcuts</h3>
+          <div class="fields">
+            <button class="chip field-chip" data-cat="Cinematography">Cinematography</button>
+            <button class="chip field-chip" data-cat="Rescue">Rescue</button>
+            <button class="chip field-chip" data-cat="Mapping">Mapping</button>
+            <button class="chip field-chip" data-cat="Industrial">Industrial</button>
+          </div>
+          <p class="tiny">Chips on this page instantly filter the feed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Threads</p>
+          <h2>Chosen by operators and engineers</h2>
+          <p class="lede">Same data as the homepage, fully focused on the forum.</p>
+        </div>
+        <div class="filters" id="filterBar"></div>
+      </div>
+      <div class="card-grid forum-grid" id="forumGrid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>JCI // SkyVision Division</div>
+    <div class="foot-links">
+      <a href="products.html">Fleet</a>
+      <a href="forum.html">Forum</a>
+      <a href="store.html">Store</a>
+      <a href="contact.html">Support</a>
+    </div>
+    <div class="foot-meta">Crafted for HCI final project</div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

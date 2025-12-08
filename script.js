@@ -118,17 +118,8 @@ const categories = [
   "Community"
 ];
 
-const productGrid = document.getElementById("productGrid");
-const forumGrid = document.getElementById("forumGrid");
-const filterBar = document.getElementById("filterBar");
-
-const setForumFilter = (cat) => {
-  renderFilters(cat);
-  renderForums(cat);
-};
-
-function renderProducts() {
-  productGrid.innerHTML = products
+function renderProducts(grid) {
+  grid.innerHTML = products
     .map(
       (p) => `
         <article class="card product-card">
@@ -140,8 +131,8 @@ function renderProducts() {
             <h3>${p.name}</h3>
             <p>${p.desc}</p>
             <div class="actions">
-              <a class="btn primary" href="#store">Go to Store</a>
-              <a class="btn ghost" href="#forum">Ask the crew</a>
+              <a class="btn primary" href="store.html">Go to Store</a>
+              <a class="btn ghost" href="forum.html">Ask the crew</a>
             </div>
           </div>
         </article>
@@ -150,7 +141,7 @@ function renderProducts() {
     .join("");
 }
 
-function renderFilters(active = "All") {
+function renderFilters(filterBar, active = "All") {
   filterBar.innerHTML = categories
     .map(
       (c) =>
@@ -159,7 +150,7 @@ function renderFilters(active = "All") {
     .join("");
 }
 
-function renderForums(active = "All") {
+function renderForums(forumGrid, active = "All") {
   const filtered = active === "All" ? forums : forums.filter((f) => f.category === active);
   forumGrid.innerHTML = filtered
     .map(
@@ -182,36 +173,85 @@ function renderForums(active = "All") {
     .join("");
 }
 
-renderProducts();
-renderFilters();
-renderForums();
+function initProducts() {
+  const grid = document.getElementById("productGrid");
+  if (!grid) return;
+  renderProducts(grid);
+}
 
-filterBar.addEventListener("click", (e) => {
-  const btn = e.target.closest("button[data-cat]");
-  if (!btn) return;
-  const cat = btn.dataset.cat;
-  setForumFilter(cat);
-});
+function initForum() {
+  const forumGrid = document.getElementById("forumGrid");
+  const filterBar = document.getElementById("filterBar");
+  if (!forumGrid || !filterBar) return null;
 
-/* Hero field chips -> forum filters */
-document.querySelectorAll(".field-chip").forEach((chip) => {
-  chip.addEventListener("click", () => {
-    const cat = chip.dataset.cat;
-    setForumFilter(cat);
-    location.hash = "#forum";
+  const render = (cat = "All") => {
+    renderFilters(filterBar, cat);
+    renderForums(forumGrid, cat);
+  };
+
+  const applyFilter = (cat = "All") => {
+    const allowed = categories.includes(cat) ? cat : "All";
+    render(allowed);
+    const url = new URL(window.location.href);
+    if (allowed === "All") {
+      url.searchParams.delete("cat");
+    } else {
+      url.searchParams.set("cat", allowed);
+    }
+    window.history.replaceState({}, "", url);
+  };
+
+  filterBar.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-cat]");
+    if (!btn) return;
+    applyFilter(btn.dataset.cat);
   });
-});
 
-/* Mobile nav toggle */
-const navToggle = document.querySelector(".nav-toggle");
-const nav = document.querySelector(".nav");
-navToggle.addEventListener("click", () => {
-  nav.classList.toggle("open");
-});
+  const initialCat = (() => {
+    const queryCat = new URLSearchParams(window.location.search).get("cat");
+    const hashCat = window.location.hash.replace("#", "");
+    if (queryCat && categories.includes(queryCat)) return queryCat;
+    if (hashCat && categories.includes(hashCat)) return hashCat;
+    return "All";
+  })();
 
-/* Hero video: swap between primary and tiger clip */
-const heroVideo = document.getElementById("heroVideo");
-if (heroVideo) {
+  applyFilter(initialCat);
+  return { setForumFilter: applyFilter };
+}
+
+function initFieldChips(forumControls) {
+  const chips = document.querySelectorAll(".field-chip");
+  if (!chips.length) return;
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const cat = chip.dataset.cat;
+      if (forumControls?.setForumFilter) {
+        forumControls.setForumFilter(cat);
+        const forumSection = document.getElementById("forum");
+        if (forumSection) {
+          forumSection.scrollIntoView({ behavior: "smooth" });
+        }
+      } else {
+        const destination = cat ? `forum.html?cat=${encodeURIComponent(cat)}` : "forum.html";
+        window.location.href = destination;
+      }
+    });
+  });
+}
+
+function initNav() {
+  const navToggle = document.querySelector(".nav-toggle");
+  const nav = document.querySelector(".nav");
+  if (!navToggle || !nav) return;
+  navToggle.addEventListener("click", () => {
+    nav.classList.toggle("open");
+  });
+}
+
+function initHeroVideo() {
+  const heroVideo = document.getElementById("heroVideo");
+  if (!heroVideo) return;
   const heroSources = [heroVideo.dataset.srcPrimary, heroVideo.dataset.srcAlt].filter(Boolean);
   let heroIndex = 0;
 
@@ -228,141 +268,158 @@ if (heroVideo) {
   });
 }
 
-/* Metric animation */
-const metrics = document.querySelectorAll(".metric-value");
-const animateMetrics = () => {
-  metrics.forEach((el) => {
-    const target = Number(el.dataset.target);
-    let current = 0;
-    const step = Math.max(1, Math.floor(target / 60));
-    const tick = () => {
-      current += step;
-      if (current >= target) {
-        el.textContent = target;
-        return;
-      }
-      el.textContent = current;
-      requestAnimationFrame(tick);
-    };
-    tick();
-  });
-};
-if ("IntersectionObserver" in window) {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animateMetrics();
-          observer.disconnect();
+function initMetrics() {
+  const metrics = document.querySelectorAll(".metric-value");
+  const homeSection = document.querySelector("#home");
+  if (!metrics.length || !homeSection) return;
+
+  const animateMetrics = () => {
+    metrics.forEach((el) => {
+      const target = Number(el.dataset.target);
+      let current = 0;
+      const step = Math.max(1, Math.floor(target / 60));
+      const tick = () => {
+        current += step;
+        if (current >= target) {
+          el.textContent = target;
+          return;
         }
-      });
-    },
-    { threshold: 0.3 }
-  );
-  observer.observe(document.querySelector("#home"));
-} else {
-  animateMetrics();
+        el.textContent = current;
+        requestAnimationFrame(tick);
+      };
+      tick();
+    });
+  };
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateMetrics();
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(homeSection);
+  } else {
+    animateMetrics();
+  }
 }
 
-/* Contact form validation */
-const form = document.getElementById("contactForm");
-const errors = {
-  name: document.getElementById("err-name"),
-  email: document.getElementById("err-email"),
-  phone: document.getElementById("err-phone"),
-  role: document.getElementById("err-role"),
-  channel: document.getElementById("err-channel"),
-  message: document.getElementById("err-message"),
-  terms: document.getElementById("err-terms")
-};
+function initContactForm() {
+  const form = document.getElementById("contactForm");
+  if (!form) return;
+  const errors = {
+    name: document.getElementById("err-name"),
+    email: document.getElementById("err-email"),
+    phone: document.getElementById("err-phone"),
+    role: document.getElementById("err-role"),
+    channel: document.getElementById("err-channel"),
+    message: document.getElementById("err-message"),
+    terms: document.getElementById("err-terms")
+  };
 
-const isEmailBasic = (value) => value.includes("@") && value.split("@")[1]?.includes(".");
-const isPhoneBasic = (value) => {
-  let digits = 0;
-  for (const ch of value) {
-    if (ch >= "0" && ch <= "9") digits += 1;
-  }
-  return digits >= 9 && digits <= 14;
-};
+  const isEmailBasic = (value) => value.includes("@") && value.split("@")[1]?.includes(".");
+  const isPhoneBasic = (value) => {
+    let digits = 0;
+    for (const ch of value) {
+      if (ch >= "0" && ch <= "9") digits += 1;
+    }
+    return digits >= 9 && digits <= 14;
+  };
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  let valid = true;
-
-  const name = form.name.value.trim();
-  if (name.length < 3) {
-    errors.name.textContent = "Name should be at least 3 characters.";
-    valid = false;
-  } else {
-    errors.name.textContent = "";
-  }
-
-  const email = form.email.value.trim();
-  if (!isEmailBasic(email)) {
-    errors.email.textContent = "Enter a reachable email (name@domain).";
-    valid = false;
-  } else {
-    errors.email.textContent = "";
-  }
-
-  const phone = form.phone.value.trim();
-  if (!isPhoneBasic(phone)) {
-    errors.phone.textContent = "Phone should contain 9-14 digits.";
-    valid = false;
-  } else {
-    errors.phone.textContent = "";
-  }
-
-  const role = form.role.value;
-  if (!role) {
-    errors.role.textContent = "Choose your focus.";
-    valid = false;
-  } else {
-    errors.role.textContent = "";
-  }
-
-  const channel = form.querySelector('input[name="channel"]:checked');
-  if (!channel) {
-    errors.channel.textContent = "Pick a preferred channel.";
-    valid = false;
-  } else {
-    errors.channel.textContent = "";
-  }
-
-  const message = form.message.value.trim();
-  if (message.length < 12) {
-    errors.message.textContent = "Tell us a bit more about your mission.";
-    valid = false;
-  } else {
-    errors.message.textContent = "";
-  }
-
-  if (!form.terms.checked) {
-    errors.terms.textContent = "You must agree to continue.";
-    valid = false;
-  } else {
-    errors.terms.textContent = "";
-  }
-
-  if (valid) {
-    alert("Request sent. Our contact center will respond soon.");
-    form.reset();
-  }
-});
-
-/* Store badge alerts */
-document.querySelectorAll('.badge[data-store]').forEach((badge) => {
-  badge.addEventListener("click", (e) => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const store = badge.dataset.store || "store";
-    alert(`Opening ${store} soon. Stay tuned!`);
-  });
-});
+    let valid = true;
 
-document.querySelectorAll('.badge[data-partner]').forEach((badge) => {
-  badge.addEventListener("click", (e) => {
-    e.preventDefault();
-    const partner = badge.dataset.partner || "partner";
-    alert(`Redirecting to ${partner} soon. Stay tuned!`);
+    const name = form.name.value.trim();
+    if (name.length < 3) {
+      errors.name.textContent = "Name should be at least 3 characters.";
+      valid = false;
+    } else {
+      errors.name.textContent = "";
+    }
+
+    const email = form.email.value.trim();
+    if (!isEmailBasic(email)) {
+      errors.email.textContent = "Enter a reachable email (name@domain).";
+      valid = false;
+    } else {
+      errors.email.textContent = "";
+    }
+
+    const phone = form.phone.value.trim();
+    if (!isPhoneBasic(phone)) {
+      errors.phone.textContent = "Phone should contain 9-14 digits.";
+      valid = false;
+    } else {
+      errors.phone.textContent = "";
+    }
+
+    const role = form.role.value;
+    if (!role) {
+      errors.role.textContent = "Choose your focus.";
+      valid = false;
+    } else {
+      errors.role.textContent = "";
+    }
+
+    const channel = form.querySelector('input[name="channel"]:checked');
+    if (!channel) {
+      errors.channel.textContent = "Pick a preferred channel.";
+      valid = false;
+    } else {
+      errors.channel.textContent = "";
+    }
+
+    const message = form.message.value.trim();
+    if (message.length < 12) {
+      errors.message.textContent = "Tell us a bit more about your mission.";
+      valid = false;
+    } else {
+      errors.message.textContent = "";
+    }
+
+    if (!form.terms.checked) {
+      errors.terms.textContent = "You must agree to continue.";
+      valid = false;
+    } else {
+      errors.terms.textContent = "";
+    }
+
+    if (valid) {
+      alert("Request sent. Our contact center will respond soon.");
+      form.reset();
+    }
   });
-});
+}
+
+function initStoreBadges() {
+  document.querySelectorAll('.badge[data-store]').forEach((badge) => {
+    badge.addEventListener("click", (e) => {
+      e.preventDefault();
+      const store = badge.dataset.store || "store";
+      alert(`Opening ${store} soon. Stay tuned!`);
+    });
+  });
+
+  document.querySelectorAll('.badge[data-partner]').forEach((badge) => {
+    badge.addEventListener("click", (e) => {
+      e.preventDefault();
+      const partner = badge.dataset.partner || "partner";
+      alert(`Redirecting to ${partner} soon. Stay tuned!`);
+    });
+  });
+}
+
+initNav();
+initHeroVideo();
+initMetrics();
+initProducts();
+const forumControls = initForum();
+initFieldChips(forumControls);
+initContactForm();
+initStoreBadges();

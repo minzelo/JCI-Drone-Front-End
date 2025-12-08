@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | JCI SkyVision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Go to JCI home">
+      <div class="brand-mark">JCI</div>
+      <div class="brand-text">
+        <span>SkyVision</span>
+        <small>Drone Innovation Lab</small>
+      </div>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="forum.html">Forum</a>
+      <a href="store.html">Store</a>
+      <a href="contact.html">Contact</a>
+      <a class="pill" href="store.html#app">Get the App</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="contact" class="section contact">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h1>Dispatch a request</h1>
+          <p class="lede">Our contact center replies within one business day for partners, pilots, and new crews.</p>
+        </div>
+      </div>
+      <div class="contact-grid">
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <label for="name">Full name</label>
+            <input type="text" id="name" name="name" placeholder="Alex Carter">
+            <small class="error" id="err-name"></small>
+          </div>
+          <div class="form-row">
+            <label for="email">Work email</label>
+            <input type="email" id="email" name="email" placeholder="pilot@studio.com">
+            <small class="error" id="err-email"></small>
+          </div>
+          <div class="form-row">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" placeholder="+1 212 555 0111">
+            <small class="error" id="err-phone"></small>
+          </div>
+          <div class="form-row">
+            <label for="role">I fly for</label>
+            <select id="role" name="role">
+              <option value="">Select a focus</option>
+              <option value="film">Film production</option>
+              <option value="rescue">Rescue & safety</option>
+              <option value="inspection">Industrial inspection</option>
+              <option value="mapping">Mapping & survey</option>
+              <option value="hobby">Hobby crew</option>
+              <option value="security">Security & perimeter patrol</option>
+            </select>
+            <small class="error" id="err-role"></small>
+          </div>
+          <div class="form-row">
+            <label>Preferred channel</label>
+            <div class="radio-row">
+              <label><input type="radio" name="channel" value="call"> Call</label>
+              <label><input type="radio" name="channel" value="email"> Email</label>
+              <label><input type="radio" name="channel" value="whatsapp"> WhatsApp</label>
+            </div>
+            <small class="error" id="err-channel"></small>
+          </div>
+          <div class="form-row">
+            <label for="message">Mission details</label>
+            <textarea id="message" name="message" rows="4" placeholder="Tell us about terrain, payload, or deadline."></textarea>
+            <small class="error" id="err-message"></small>
+          </div>
+          <div class="form-row checkbox">
+            <label><input type="checkbox" id="terms" name="terms"> I agree to JCI data handling terms.</label>
+            <small class="error" id="err-terms"></small>
+          </div>
+          <div class="form-row">
+            <button class="btn primary" type="submit">Send request</button>
+            <p class="tiny">You will receive a confirmation summary.</p>
+          </div>
+        </form>
+        <div class="contact-side">
+          <div class="pulse-card">
+            <p class="eyebrow">Live status</p>
+            <h3>Ops center online</h3>
+            <p>We monitor missions 24/7 for fleet health, firmware, and emergency support.</p>
+            <ul class="status-list">
+              <li><span class="dot green"></span> Response SLA &lt; 1 day</li>
+              <li><span class="dot green"></span> Field engineers in 18 cities</li>
+              <li><span class="dot yellow"></span> Heavy weather line active</li>
+            </ul>
+            <div class="chip-row">
+              <div class="chip">ISO 27001</div>
+              <div class="chip">SOC 2 ready</div>
+              <div class="chip">EU GDPR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>JCI // SkyVision Division</div>
+    <div class="foot-links">
+      <a href="products.html">Fleet</a>
+      <a href="forum.html">Forum</a>
+      <a href="store.html">Store</a>
+      <a href="contact.html">Support</a>
+    </div>
+    <div class="foot-meta">Crafted for HCI final project</div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,10 +1,6 @@
 # JCI Drones
 ```
-      ___  ___  ___
-     |   \| _ \/ __|
-     | |) |   /\__ \
-     |___/|_|_\|___/
-        SkyVision Lab
+JCI logo
 ```
 
 Landing page untuk armada drone JCI yang dibuat untuk final project HCI LAB.
@@ -22,4 +18,4 @@ Landing page untuk armada drone JCI yang dibuat untuk final project HCI LAB.
 2. Pastikan folder `assets/` berada di lokasi yang sama untuk memuat gambar dan video.
 
 ## Sumber desain
-- Figma: https://www.figma.com/design/ZrFWmMA3aJ49DrmeZtjhbA/HCI-LAB-Final-Project
+- Figma: `JCI Design.fig` (berkas di direktori utama)
